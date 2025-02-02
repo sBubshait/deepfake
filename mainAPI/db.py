@@ -84,3 +84,11 @@ def get_real_text(character_id):
         return None
 
     return random.choice(audio_data)['text']
+
+def get_character_by_id(character_id):
+    """
+    Return a character by ID
+    """
+    characters_collection = db['characters']
+    character = characters_collection.find_one({"characterID": character_id}, {"_id": 0})
+    return character

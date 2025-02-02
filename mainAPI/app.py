@@ -50,10 +50,10 @@ def random():
             else:
                 fake_voice_id = db.get_fake_voice_id(character['characterID'])
                 fake_text = llm.get_fake_text(character['name'])
-                fake_audio = tts.get_audio_path(fake_text, fake_voice_id)
+                fake_audio_uuid = tts.get_audio_path(fake_text, fake_voice_id)
                 return jsonify({
                     'character': character,
-                    'audio_path': fake_audio,
+                    'audio_path': 'https://static.bubshait.me/ichack25/fake/' + str(fake_audio_uuid) + ".mp3",
                     'is_real': False
                 })
         case _:
@@ -90,4 +90,4 @@ def pair():
 
 CORS(app)
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=3048)

@@ -18,7 +18,8 @@ def get_audio_path(text, voice_id):
         output_format="mp3_44100_128",
     )
 
-    save_file_path = f"audio/fake/{uuid.uuid4()}.mp3"
+    uuidvar = uuid.uuid4()
+    save_file_path = f"/public/www/ichack25/fake/{uuidvar}.mp3"
     os.makedirs(os.path.dirname(save_file_path), exist_ok=True)
 
     with open(save_file_path, "wb") as f:
@@ -26,5 +27,4 @@ def get_audio_path(text, voice_id):
             if chunk:
                 f.write(chunk)
 
-    return save_file_path
-
+    return uuidvar

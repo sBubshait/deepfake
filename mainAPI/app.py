@@ -21,6 +21,8 @@ def characters():
 def random():
     # Return a path to random fake or real data for a random character
     media_type = request.args.get('type')
+    character = db.get_random_character()
+    is_real = rnd.choice([True, False])
     match media_type:
         case 'audio':
             if is_real:

@@ -24,8 +24,6 @@ def random():
     media_type = request.args.get('type')
     match media_type:
         case 'audio':
-            character = db.get_random_character()
-            is_real = rnd.choice([True, False])
             if is_real:
                 real_audio = db.get_real_audio_path(character['characterID'])
                 return jsonify({

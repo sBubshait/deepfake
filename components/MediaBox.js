@@ -1,3 +1,4 @@
+"use client";
 import React from 'react';
 
 export function MediaBox({ id, selected, imgSrc, onSelect, children }) {

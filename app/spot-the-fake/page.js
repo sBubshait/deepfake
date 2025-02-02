@@ -20,7 +20,7 @@ const SpotTheFake = () => {
       const type = "audio";
       setMediaType(type);
       try {
-        const response = await fetch(`http://127.0.0.1:5000/pair?type=${type}`);
+        const response = await fetch(`http://5.75.237.7:3048/pair?type=${type}`);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }

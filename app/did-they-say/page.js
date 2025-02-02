@@ -32,7 +32,7 @@ const DidTheySay = () => {
       setLoading(true);
       const type = "audio";
       setMediaType(type);
-      const response = await fetch(`http://127.0.0.1:5000/random?type=${type}`);
+      const response = await fetch(`http://5.75.237.7:3048/random?type=${type}`);
       const data = await response.json();
       setMediaData({
         audioPath: type === "audio" ? data.audio_path : data.real_text,

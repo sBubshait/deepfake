@@ -6,9 +6,9 @@ import Head from "next/head";
 import Link from "next/link";
 
 const getScoreMessage = (score) => {
-    if (score === 10) return "🎉 Perfect! You're a master at spotting deep fakes!";
-    if (score >= 7) return "😎 Great job! You have a sharp eye for fakes.";
-    if (score >= 4) return "🤔 Not bad! But you might have been tricked a few times.";
+    if (score === 3) return "🎉 Perfect! You're a master at spotting deep fakes!";
+    if (score >= 2) return "😎 Great job! You have a sharp eye for fakes.";
+    if (score >= 1) return "🤔 Not bad! But you might have been tricked a few times.";
     return "😵 Oof! The fakes got you this time. Try again!";
   };
 

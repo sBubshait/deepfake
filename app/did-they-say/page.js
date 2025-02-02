@@ -35,7 +35,7 @@ const DidTheySay = () => {
       setLoading(true);
       const type = "audio";
       setMediaType(type);
-      const response = await fetch(`http://5.75.237.7:3048/random?type=${type}`);
+      const response = await fetch(`http://5.75.237.7:3048/demo?type=${type}`);
       const data = await response.json();
       setMediaData({
         audioPath: type === "audio" ? data.audio_path : data.real_text,
@@ -84,13 +84,13 @@ const DidTheySay = () => {
       </div>
       <div className="flex space-x-4 mt-8">
         <button
-          onClick={() => checkResponse(true && mediaData.is_real)}
+          onClick={() => checkResponse(!mediaData.is_real)}
           className="px-6 py-3 text-lg font-semibold rounded-lg transition bg-green-600 hover:bg-green-700"
         >
           Yes
         </button>
         <button
-          onClick={() => checkResponse(!(false || mediaData.is_real))}
+          onClick={() => checkResponse(mediaData.is_real)}
           className="px-6 py-3 text-lg font-semibold rounded-lg transition bg-red-600 hover:bg-red-700"
         >
           No

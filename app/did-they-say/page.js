@@ -35,8 +35,9 @@ const DidTheySay = () => {
       const response = await fetch(`http://127.0.0.1:5000/random?type=${type}`);
       const data = await response.json();
       setMediaData({
-        audioPath: type === "audio" ? data.real_audio_path : data.real_text,
+        audioPath: type === "audio" ? data.audio_path : data.real_text,
         is_real: data.is_real,
+        character: data.character.img
       });
       setLoading(false);
     };
@@ -52,7 +53,7 @@ const DidTheySay = () => {
     );
   }
 
-  console.log(mediaData.is_real);
+  console.log(mediaData.character);
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
       <div className="w-full flex justify-between items-center px-8 py-4">
@@ -65,7 +66,7 @@ const DidTheySay = () => {
             id={1}
             selected={selected === 1}
             onSelect={handleSelect}
-            imgSrc="/path/to/audio-placeholder.jpg"
+            imgSrc={mediaData.character}
             audioSrc={mediaData.audioPath}
           />
         ) : (
@@ -73,7 +74,7 @@ const DidTheySay = () => {
             id={1}
             selected={selected === 1}
             onSelect={handleSelect}
-            imgSrc="/path/to/text-placeholder.jpg"
+            imgSrc={mediaData.character}
             text={mediaData.audioPath}
           />
         )}

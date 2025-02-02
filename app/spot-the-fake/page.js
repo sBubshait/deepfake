@@ -27,6 +27,7 @@ const SpotTheFake = () => {
         setMediaData({
           real: type === "audio" ? data.real_audio_path : data.real_text,
           fake: type === "audio" ? data.fake_audio_path : data.fake_text,
+          img: data.character.img
         });
       } catch (error) {
         console.error("Failed to fetch media data:", error);
@@ -38,6 +39,7 @@ const SpotTheFake = () => {
     fetchMediaData();
   }, [counter]);
 
+  console.log(mediaData);
   const handleSelect = (id) => {
     setSelected(id);
   };
@@ -77,14 +79,14 @@ const SpotTheFake = () => {
               id={1}
               selected={selected === 1}
               onSelect={handleSelect}
-              imgSrc="/path/to/audio-placeholder.jpg"
+              imgSrc={mediaData.img}
               audioSrc={mediaData.real}
             />
             <AudioComponent
               id={2}
               selected={selected === 2}
               onSelect={handleSelect}
-              imgSrc="/path/to/audio-placeholder.jpg"
+              imgSrc={mediaData.img}
               audioSrc={mediaData.fake}
             />
           </>

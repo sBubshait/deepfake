@@ -15,6 +15,7 @@ const GamePage = () => {
   const [roomId, setRoomId] = useState(null);
   const [username, setUsername] = useState(null);
   const [finished, setFinished] = useState(false);
+  const [score, setScore] = useState(0);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -61,14 +62,26 @@ const GamePage = () => {
       console.log("Wrong!");
     }
 
+    let newScore = score+1;
+    if (is_real) {
+      setScore(newScore);
+    } else {
+      console.log("oh no!");
+    }
+
     if (counter === 3) {
       setFinished(true);
       socket.emit("updateScore", { roomId, username });
+      socket.emit("playerFinished", { 
+          roomId, 
+          finalScore: newScore
+        });
       router.push(`/multiplayer/finish?roomId=${roomId}&username=${username}`);
     } else {
       setCounter(counter + 1);
     }
   }
+
 
   if (loading) return <p>Loading...</p>;
 

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { TextComponent, AudioComponent } from "../../components/MediaBox"; // Adjust the import path as necessary
 
 const SpotTheFake = () => {
+  const MAX_ROUNDS = 3;
   const [counter, setCounter] = useState(1);
   const [score, setScore] = useState(0);
   const [selected, setSelected] = useState(null);
@@ -47,16 +48,17 @@ const SpotTheFake = () => {
 
   const handleSubmit = () => {
     const isCorrect = (isRealFirst && selected === 1) || (!isRealFirst && selected === 2);
+    let newScore = score+1;
     if (isCorrect) {
-      setScore(score + 1);
+      setScore(newScore);
     } else {
       console.log("oh no!");
     }
-    if (counter < 10) {
+    if (counter >= MAX_ROUNDS) {
       setCounter(counter + 1);
       setSelected(null);
     } else {
-      router.push(`/score-page?score=${score}`);
+      router.push(`/score-page?score=${newScore}`);
     }
   };
 
@@ -72,7 +74,7 @@ const SpotTheFake = () => {
     <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
       <div className="w-full flex justify-between items-center px-8 py-4">
         <h1 className="text-4xl font-bold">Spot the Fake</h1>
-        <span className="text-xl">Counter: {counter}/10</span>
+        <span className="text-xl">Question: {counter}/{MAX_ROUNDS}</span>
       </div>
       <div className="flex space-x-4 mt-8">
         {mediaType === "audio" ? (

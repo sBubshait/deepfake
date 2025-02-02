@@ -14,6 +14,7 @@ const getScoreMessage = (score) => {
 
 const ScorePage = () => {
   const router = useRouter();
+  const MAX_ROUNDS = 3;
   const searchParams = useSearchParams();
   const [score, setScore] = useState(0);
 
@@ -27,7 +28,7 @@ const ScorePage = () => {
   return (
     <div className="flex items-center justify-center h-screen bg-gray-900 text-white">
       <div className="text-center">
-        <h1 className="text-6xl font-bold mb-8">Your Score: {score}/10</h1>
+        <h1 className="text-6xl font-bold mb-8">Your Score: {score}/{MAX_ROUNDS}</h1>
         <p className="text-2xl mb-12">{getScoreMessage(score)}</p>
         <div className="flex flex-row items-center align-middle justify-center space-x-4">
           <Link href="/single-player" className="w-52 px-6 py-4 text-lg font-semibold bg-indigo-600 hover:bg-indigo-700 rounded-lg transition">

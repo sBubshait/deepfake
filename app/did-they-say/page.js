@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { TextComponent, AudioComponent } from "../../components/MediaBox"; // Adjust the import path as necessary
 
 const DidTheySay = () => {
+  const MAX_ROUNDS = 3;
   const [counter, setCounter] = useState(1);
   const [selected, setSelected] = useState(null);
   const [score, setScore] = useState(0);
@@ -14,14 +15,16 @@ const DidTheySay = () => {
   const router = useRouter();
 
   const checkResponse = (is_real) => {
-    if (is_real === mediaData.is_real) {
-      setScore(score + 1);
+    let newScore = score+1;
+    if (is_real) {
+      setScore(newScore);
     } else {
       console.log("oh no!");
     }
+    console.log(score);
     setCounter(counter + 1);
-    if (counter >= 10) {
-      router.push(`/score-page?score=${score}`);
+    if (counter >= MAX_ROUNDS) {
+      router.push(`/score-page?score=${newScore}`);
     }
   };
 
@@ -58,7 +61,7 @@ const DidTheySay = () => {
     <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
       <div className="w-full flex justify-between items-center px-8 py-4">
         <h1 className="text-4xl font-bold">Did They Say?</h1>
-        <span className="text-xl">Counter: {counter}/10</span>
+        <span className="text-xl">Question: {counter}/{MAX_ROUNDS}</span>
       </div>
       <div className="flex space-x-4 mt-8">
         {mediaType === "audio" ? (
@@ -81,13 +84,13 @@ const DidTheySay = () => {
       </div>
       <div className="flex space-x-4 mt-8">
         <button
-          onClick={() => checkResponse(true)}
+          onClick={() => checkResponse(true && mediaData.is_real)}
           className="px-6 py-3 text-lg font-semibold rounded-lg transition bg-green-600 hover:bg-green-700"
         >
           Yes
         </button>
         <button
-          onClick={() => checkResponse(false)}
+          onClick={() => checkResponse(!(false || mediaData.is_real))}
           className="px-6 py-3 text-lg font-semibold rounded-lg transition bg-red-600 hover:bg-red-700"
         >
           No

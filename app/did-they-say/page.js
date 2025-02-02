@@ -1,11 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Head from 'next/head';
-import Link from 'next/link';
-import { TextComponent, AudioComponent } from '../../components/MediaBox';
+import { AudioComponent } from '../../components/MediaBox';
 
 export default function Home() {
   const [counter, setCounter] = useState(1);  
+  const [score, setScore] = useState(0);
   const [loading, setLoading] = useState(true);
   const [mediaType, setMediaType] = useState("");
   const [mediaData, setMediaData] = useState({ audioPath: "", is_real: false });
@@ -13,7 +13,7 @@ export default function Home() {
 
   function checkResponse(is_real) {
     if (is_real === mediaData.is_real) {
-      console.log("yippee!");
+      setScore(score + 1);
     } else {
       console.log("oh no!");
     }

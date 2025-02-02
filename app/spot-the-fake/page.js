@@ -5,6 +5,7 @@ import { TextComponent, AudioComponent } from "../../components/MediaBox"; // Ad
 
 const SpotTheFake = () => {
   const [counter, setCounter] = useState(1);
+  const [score, setScore] = useState(0);
   const [selected, setSelected] = useState(null);
   const [mediaData, setMediaData] = useState({ real: "", fake: "" });
   const [mediaType, setMediaType] = useState("");
@@ -32,6 +33,11 @@ const SpotTheFake = () => {
   };
 
   const handleSubmit = () => {
+    if(selected === 1) {
+      setScore(score + 1);
+    } else if (selected === 2) {
+      console.log("oh no!");
+    }
     if (counter < 10) {
       setCounter(counter + 1);
       setSelected(null);

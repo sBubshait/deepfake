@@ -35,9 +35,10 @@ def get_random_character():
     Return a random character from the database
     """
     characters_collection = db['characters']
-    random_character = characters_collection.aggregate([{
-        "$sample": {"size": 1}
-    }])
+    random_character = characters_collection.aggregate([
+        {"$sample": {"size": 1}},
+        {"$project": {"_id": 0}}
+    ])
     return list(random_character)[0]
 
 
@@ -62,3 +63,14 @@ def get_fake_voice_id(character_id):
         "characterID": character_id
     })
     return audio_data['voiceID']
+
+def get_real_text(character_id):
+    """
+    Return the text for the real audio for the given character
+    """
+    real_audio_collection = db['real']
+    audio_data = real_audio_collection.find_one({
+        "characterID": character_id,
+        "type": "text"
+    })
+    return audio_data['text']

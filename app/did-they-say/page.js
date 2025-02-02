@@ -79,18 +79,20 @@ const DidTheySay = () => {
           />
         )}
       </div>
-      <button
-        onClick={() => checkResponse(true)}
-        className="mt-8 px-6 py-3 text-lg font-semibold rounded-lg transition bg-green-600 hover:bg-green-700"
-      >
-        Yes
-      </button>
-      <button
-        onClick={() => checkResponse(false)}
-        className="mt-8 px-6 py-3 text-lg font-semibold rounded-lg transition bg-red-600 hover:bg-red-700"
-      >
-        No
-      </button>
+      <div className="flex space-x-4 mt-8">
+        <button
+          onClick={() => checkResponse(true)}
+          className="px-6 py-3 text-lg font-semibold rounded-lg transition bg-green-600 hover:bg-green-700"
+        >
+          Yes
+        </button>
+        <button
+          onClick={() => checkResponse(false)}
+          className="px-6 py-3 text-lg font-semibold rounded-lg transition bg-red-600 hover:bg-red-700"
+        >
+          No
+        </button>
+      </div>
     </div>
   );
 };

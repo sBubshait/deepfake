@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { TextComponent, AudioComponent } from "../../components/MediaBox"; // Adjust the import path as necessary
 
 const SpotTheFake = () => {
@@ -10,19 +11,28 @@ const SpotTheFake = () => {
   const [mediaData, setMediaData] = useState({ real: "", fake: "" });
   const [mediaType, setMediaType] = useState("");
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchMediaData = async () => {
       setLoading(true);
       const type = "audio";
       setMediaType(type);
-      const response = await fetch(`http://127.0.0.1:5000/pair?type=${type}`);
-      const data = await response.json();
-      setMediaData({
-        real: type === "audio" ? data.real_audio_path : data.real_text,
-        fake: type === "audio" ? data.fake_audio_path : data.fake_text,
-      });
-      setLoading(false);
+      try {
+        const response = await fetch(`http://127.0.0.1:5000/pair?type=${type}`);
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setMediaData({
+          real: type === "audio" ? data.real_audio_path : data.real_text,
+          fake: type === "audio" ? data.fake_audio_path : data.fake_text,
+        });
+      } catch (error) {
+        console.error("Failed to fetch media data:", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchMediaData();
@@ -33,7 +43,7 @@ const SpotTheFake = () => {
   };
 
   const handleSubmit = () => {
-    if(selected === 1) {
+    if (selected === 1) {
       setScore(score + 1);
     } else if (selected === 2) {
       console.log("oh no!");
@@ -42,7 +52,7 @@ const SpotTheFake = () => {
       setCounter(counter + 1);
       setSelected(null);
     } else {
-      window.location.href = "/";
+      router.push(`/score-page?score=${score}`);
     }
   };
 

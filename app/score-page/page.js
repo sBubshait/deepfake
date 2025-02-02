@@ -1,3 +1,7 @@
+"use client";
+
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 
@@ -8,12 +12,23 @@ const getScoreMessage = (score) => {
     return "😵 Oof! The fakes got you this time. Try again!";
   };
 
-export default function Home({scoreValue = 10}) {
+const ScorePage = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [score, setScore] = useState(0);
+
+  useEffect(() => {
+    const scoreParam = searchParams.get("score");
+    if (scoreParam) {
+      setScore(parseInt(scoreParam, 10));
+    }
+  }, [searchParams]);
+
   return (
     <div className="flex items-center justify-center h-screen bg-gray-900 text-white">
       <div className="text-center">
-        <h1 className="text-6xl font-bold mb-8">Your Score: {scoreValue}/10</h1>
-        <p className="text-2xl mb-12">{getScoreMessage(scoreValue)}</p>
+        <h1 className="text-6xl font-bold mb-8">Your Score: {score}/10</h1>
+        <p className="text-2xl mb-12">{getScoreMessage(score)}</p>
         <div className="flex flex-row items-center align-middle justify-center space-x-4">
           <Link href="/game" className="w-52 px-6 py-4 text-lg font-semibold bg-indigo-600 hover:bg-indigo-700 rounded-lg transition">
             Play Again
@@ -25,4 +40,6 @@ export default function Home({scoreValue = 10}) {
       </div>
     </div>
   );
-}
+};
+
+export default ScorePage;

@@ -1,27 +1,31 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import Head from 'next/head';
-import { AudioComponent } from '../../components/MediaBox';
 
-export default function Home() {
-  const [counter, setCounter] = useState(1);  
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { TextComponent, AudioComponent } from "../../components/MediaBox"; // Adjust the import path as necessary
+
+const DidTheySay = () => {
+  const [counter, setCounter] = useState(1);
+  const [selected, setSelected] = useState(null);
   const [score, setScore] = useState(0);
   const [loading, setLoading] = useState(true);
   const [mediaType, setMediaType] = useState("");
   const [mediaData, setMediaData] = useState({ audioPath: "", is_real: false });
+  const router = useRouter();
 
-
-  function checkResponse(is_real) {
+  const checkResponse = (is_real) => {
     if (is_real === mediaData.is_real) {
       setScore(score + 1);
     } else {
       console.log("oh no!");
     }
     setCounter(counter + 1);
-    if (counter > 10) {
-      window.location.href = "/";
+    if (counter >= 10) {
+      router.push(`/score-page?score=${score}`);
     }
-  }
+  };
+
+  function handleSelect(id) { setSelected(id); }
 
   useEffect(() => {
     const fetchMediaData = async () => {
@@ -31,15 +35,14 @@ export default function Home() {
       const response = await fetch(`http://127.0.0.1:5000/random?type=${type}`);
       const data = await response.json();
       setMediaData({
-        audioPath: data.audio_path,
+        audioPath: type === "audio" ? data.real_audio_path : data.real_text,
         is_real: data.is_real,
-      })
+      });
       setLoading(false);
     };
 
     fetchMediaData();
   }, [counter]);
-
 
   if (loading) {
     return (
@@ -49,29 +52,46 @@ export default function Home() {
     );
   }
 
-  console.log(mediaData);
-
+  console.log(mediaData.is_real);
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-900 text-white">
-      <Head>
-        <title>Did They Say?</title>
-      </Head>
-      <div className="text-center">
-        <h1 className="text-6xl font-bold mb-12">Did They Say?</h1>
+    <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
+      <div className="w-full flex justify-between items-center px-8 py-4">
+        <h1 className="text-4xl font-bold">Did They Say?</h1>
         <span className="text-xl">Counter: {counter}/10</span>
-        {/*
-        <div className="mt-12">
-          <TextComponent imgSrc="https://d3i6fh83elv35t.cloudfront.net/static/2025/01/tariff-2-1024x683.jpg" text="America would be better if everyone went back to where they came from!!" onSelect={() => { }} />
-        </div>
-        */}
-        <div className="mt-12">
-          <AudioComponent audioSrc={mediaData.audioPath} onSelect={() => {}}/>
-        </div>
-        <div className="mt-12 flex flex-row justify-center items-center space-x-4 m-auto">
-          <button onClick={() => {checkResponse(true)}} className="w-40 px-4 py-4 text-md font-semibold bg-cyan-500 hover:bg-cyan-700 rounded-lg transition">Yes</button>
-          <button onClick={() => {checkResponse(false)}} className="w-40 px-4 py-4 text-md font-semibold bg-red-500 hover:bg-red-700 rounded-lg transition">No</button>
-        </div>
       </div>
+      <div className="flex space-x-4 mt-8">
+        {mediaType === "audio" ? (
+          <AudioComponent
+            id={1}
+            selected={selected === 1}
+            onSelect={handleSelect}
+            imgSrc="/path/to/audio-placeholder.jpg"
+            audioSrc={mediaData.audioPath}
+          />
+        ) : (
+          <TextComponent
+            id={1}
+            selected={selected === 1}
+            onSelect={handleSelect}
+            imgSrc="/path/to/text-placeholder.jpg"
+            text={mediaData.audioPath}
+          />
+        )}
+      </div>
+      <button
+        onClick={() => checkResponse(true)}
+        className="mt-8 px-6 py-3 text-lg font-semibold rounded-lg transition bg-green-600 hover:bg-green-700"
+      >
+        Yes
+      </button>
+      <button
+        onClick={() => checkResponse(false)}
+        className="mt-8 px-6 py-3 text-lg font-semibold rounded-lg transition bg-red-600 hover:bg-red-700"
+      >
+        No
+      </button>
     </div>
   );
-}  
+};
+
+export default DidTheySay;

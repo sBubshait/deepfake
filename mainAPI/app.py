@@ -54,10 +54,6 @@ def pair():
             fake_voice_id = db.get_fake_voice_id(character['characterID'])
             fake_text = llm.get_fake_text(character['name'])
             fake_audio = tts.get_audio_path(fake_text, fake_voice_id)
-            print(jsonify({
-                'real_audio_path': real_audio,
-                'fake_audio_path': fake_audio,
-            }))
             return jsonify({
                 'real_audio_path': real_audio,
                 'fake_audio_path': fake_audio,

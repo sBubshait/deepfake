@@ -24,6 +24,21 @@ def random():
     character = db.get_random_character()
     is_real = rnd.choice([True, False])
     match media_type:
+        case 'text':
+            if is_real:
+                real_text = db.get_real_text(character['characterID'])
+                return jsonify({
+                    'character': character,
+                    'text': real_text,
+                    'is_real': True,
+                })
+            else:
+                fake_text = llm.get_fake_text(character['name'])
+                return jsonify({
+                    'character': character,
+                    'text': fake_text,
+                    'is_real': False,
+                })
         case 'audio':
             if is_real:
                 real_audio = db.get_real_audio_path(character['characterID'])
@@ -50,16 +65,21 @@ def pair():
     # Return a path to a pair of real and fake data for a random character
     media_type = request.args.get('type')
     match media_type:
+        case 'text':
+            character = db.get_random_character()
+            real_text = db.get_real_text(character['characterID'])
+            fake_text = llm.get_fake_text(character['name'])
+            return jsonify({
+                'character': character,
+                'real_text': real_text,
+                'fake_text': fake_text,
+            })
         case 'audio':
             character = db.get_random_character()
             real_audio = db.get_real_audio_path(character['characterID'])
             fake_voice_id = db.get_fake_voice_id(character['characterID'])
             fake_text = llm.get_fake_text(character['name'])
             fake_audio = tts.get_audio_path(fake_text, fake_voice_id)
-            print(jsonify({
-                'real_audio_path': real_audio,
-                'fake_audio_path': fake_audio,
-            }))
             return jsonify({
                 'character': character,
                 'real_audio_path': real_audio,

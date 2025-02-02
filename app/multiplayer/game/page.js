@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import io from "socket.io-client";
 import { TextComponent, AudioComponent } from "../../../components/MediaBox";
 
-const socket = io("http://localhost:4000");
+const socket = io("http://5.75.237.7:4017");
 
 const GamePage = () => {
   const router = useRouter();
@@ -41,7 +41,7 @@ const GamePage = () => {
       setLoading(true);
       const type = "audio";
       setMediaType(type);
-      const response = await fetch(`http://127.0.0.1:5000/random?type=${type}`);
+      const response = await fetch(`http://5.75.237.7:3048/random?type=${type}`);
       const data = await response.json();
       setMediaData({
         audioPath: data.audio_path,

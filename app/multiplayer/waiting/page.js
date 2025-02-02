@@ -4,7 +4,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { io } from "socket.io-client";
 import { User } from "lucide-react";
 
-const SOCKET_SERVER_URL = "http://localhost:4000";
+const SOCKET_SERVER_URL = "http://5.75.237.7:4017";
 
 export default function WaitingRoom() {
   const searchParams = useSearchParams();

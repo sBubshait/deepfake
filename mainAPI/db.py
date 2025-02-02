@@ -1,4 +1,5 @@
 import os
+import random
 
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
@@ -44,14 +45,18 @@ def get_random_character():
 
 def get_real_audio_path(character_id):
     """
-    Return the path to the real audio for the given character
+    Return a random path to the real audio for the given character
     """
     real_audio_collection = db['real']
-    audio_data = real_audio_collection.find_one({
+    audio_data = list(real_audio_collection.find({
         "characterID": character_id,
         "type": "audio"
-    })
-    return audio_data['path']
+    }))
+
+    if not audio_data:
+        return None
+
+    return random.choice(audio_data)['path']
 
 
 def get_fake_voice_id(character_id):
@@ -64,13 +69,18 @@ def get_fake_voice_id(character_id):
     })
     return audio_data['voiceID']
 
+
 def get_real_text(character_id):
     """
-    Return the text for the real audio for the given character
+    Return a random text for the real audio for the given character
     """
     real_audio_collection = db['real']
-    audio_data = real_audio_collection.find_one({
+    audio_data = list(real_audio_collection.find({
         "characterID": character_id,
         "type": "text"
-    })
-    return audio_data['text']
+    }))
+
+    if not audio_data:
+        return None
+
+    return random.choice(audio_data)['text']

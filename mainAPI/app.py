@@ -28,6 +28,7 @@ def random():
             if is_real:
                 real_audio = db.get_real_audio_path(character['characterID'])
                 return jsonify({
+                    'character': character,
                     'audio_path': real_audio,
                     'is_real': True,
                 })
@@ -36,6 +37,7 @@ def random():
                 fake_text = llm.get_fake_text(character['name'])
                 fake_audio = tts.get_audio_path(fake_text, fake_voice_id)
                 return jsonify({
+                    'character': character,
                     'audio_path': fake_audio,
                     'is_real': False
                 })
@@ -54,7 +56,12 @@ def pair():
             fake_voice_id = db.get_fake_voice_id(character['characterID'])
             fake_text = llm.get_fake_text(character['name'])
             fake_audio = tts.get_audio_path(fake_text, fake_voice_id)
+            print(jsonify({
+                'real_audio_path': real_audio,
+                'fake_audio_path': fake_audio,
+            }))
             return jsonify({
+                'character': character,
                 'real_audio_path': real_audio,
                 'fake_audio_path': fake_audio,
             })

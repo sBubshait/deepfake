@@ -53,7 +53,7 @@ const DidTheySay = () => {
     );
   }
 
-  console.log(mediaData.character);
+  console.log(mediaData.audioPath);
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
       <div className="w-full flex justify-between items-center px-8 py-4">

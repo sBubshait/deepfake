@@ -30,7 +30,7 @@ const ScorePage = () => {
         <h1 className="text-6xl font-bold mb-8">Your Score: {score}/10</h1>
         <p className="text-2xl mb-12">{getScoreMessage(score)}</p>
         <div className="flex flex-row items-center align-middle justify-center space-x-4">
-          <Link href="/game" className="w-52 px-6 py-4 text-lg font-semibold bg-indigo-600 hover:bg-indigo-700 rounded-lg transition">
+          <Link href="/single-player" className="w-52 px-6 py-4 text-lg font-semibold bg-indigo-600 hover:bg-indigo-700 rounded-lg transition">
             Play Again
           </Link>
           <Link href="/" className="w-52 px-6 py-4 text-lg font-semibold bg-purple-600 hover:bg-purple-700 rounded-lg transition">

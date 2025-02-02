@@ -11,6 +11,7 @@ const SpotTheFake = () => {
   const [mediaData, setMediaData] = useState({ real: "", fake: "" });
   const [mediaType, setMediaType] = useState("");
   const [loading, setLoading] = useState(true);
+  const [isRealFirst, setIsRealFirst] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -27,8 +28,9 @@ const SpotTheFake = () => {
         setMediaData({
           real: type === "audio" ? data.real_audio_path : data.real_text,
           fake: type === "audio" ? data.fake_audio_path : data.fake_text,
-          img: data.character.img
+          character: data.character
         });
+        setIsRealFirst(Math.random() > 0.5);
       } catch (error) {
         console.error("Failed to fetch media data:", error);
       } finally {
@@ -39,15 +41,15 @@ const SpotTheFake = () => {
     fetchMediaData();
   }, [counter]);
 
-  console.log(mediaData);
   const handleSelect = (id) => {
     setSelected(id);
   };
 
   const handleSubmit = () => {
-    if (selected === 1) {
+    const isCorrect = (isRealFirst && selected === 1) || (!isRealFirst && selected === 2);
+    if (isCorrect) {
       setScore(score + 1);
-    } else if (selected === 2) {
+    } else {
       console.log("oh no!");
     }
     if (counter < 10) {
@@ -75,37 +77,79 @@ const SpotTheFake = () => {
       <div className="flex space-x-4 mt-8">
         {mediaType === "audio" ? (
           <>
-            <AudioComponent
-              id={1}
-              selected={selected === 1}
-              onSelect={handleSelect}
-              imgSrc={mediaData.img}
-              audioSrc={mediaData.real}
-            />
-            <AudioComponent
-              id={2}
-              selected={selected === 2}
-              onSelect={handleSelect}
-              imgSrc={mediaData.img}
-              audioSrc={mediaData.fake}
-            />
+            {isRealFirst ? (
+              <>
+                <AudioComponent
+                  id={1}
+                  selected={selected === 1}
+                  onSelect={handleSelect}
+                  imgSrc={mediaData.character.img}
+                  audioSrc={mediaData.real}
+                />
+                <AudioComponent
+                  id={2}
+                  selected={selected === 2}
+                  onSelect={handleSelect}
+                  imgSrc={mediaData.character.img}
+                  audioSrc={mediaData.fake}
+                />
+              </>
+            ) : (
+              <>
+                <AudioComponent
+                  id={1}
+                  selected={selected === 1}
+                  onSelect={handleSelect}
+                  imgSrc={mediaData.character.img}
+                  audioSrc={mediaData.fake}
+                />
+                <AudioComponent
+                  id={2}
+                  selected={selected === 2}
+                  onSelect={handleSelect}
+                  imgSrc={mediaData.character.img}
+                  audioSrc={mediaData.real}
+                />
+              </>
+            )}
           </>
         ) : (
           <>
-            <TextComponent
-              id={1}
-              selected={selected === 1}
-              onSelect={handleSelect}
-              imgSrc="/path/to/text-placeholder.jpg"
-              text={mediaData.real}
-            />
-            <TextComponent
-              id={2}
-              selected={selected === 2}
-              onSelect={handleSelect}
-              imgSrc="/path/to/text-placeholder.jpg"
-              text={mediaData.fake}
-            />
+            {isRealFirst ? (
+              <>
+                <TextComponent
+                  id={1}
+                  selected={selected === 1}
+                  onSelect={handleSelect}
+                  imgSrc={mediaData.character.img}
+                  text={mediaData.real}
+                />
+                <TextComponent
+                  id={2}
+                  selected={selected === 2}
+                  onSelect={handleSelect}
+                  imgSrc={mediaData.character.img}
+                  text={mediaData.fake}
+                />
+              </>
+            ) : (
+              <>
+                <TextComponent
+                  id={1}
+                  selected={selected === 1}
+                  onSelect={handleSelect}
+                  imgSrc={mediaData.character.img}
+                  text={mediaData.fake}
+                />
+                <TextComponent
+                  id={2}
+                  selected={selected === 2}
+                  onSelect={handleSelect}
+                  imgSrc={mediaData.character.img}
+                  text={mediaData.real}
+                />
+              </>
+            )}
           </>
         )}
       </div>

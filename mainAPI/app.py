@@ -6,7 +6,6 @@ import elevenlabs_api as tts
 import random as rnd
 
 app = Flask(__name__)
-CORS(app)
 
 
 @app.route('/characters', methods=['GET'])
@@ -28,7 +27,7 @@ def random():
                 real_audio = db.get_real_audio_path(character['characterID'])
                 return jsonify({
                     'audio_path': real_audio,
-                    'is_real': is_real,
+                    'is_real': True,
                 })
             else:
                 fake_voice_id = db.get_fake_voice_id(character['characterID'])
@@ -36,6 +35,7 @@ def random():
                 fake_audio = tts.get_audio_path(fake_text, fake_voice_id)
                 return jsonify({
                     'audio_path': fake_audio,
+                    'is_real': False
                 })
         case _:
             raise ValueError("Invalid type")
@@ -63,6 +63,6 @@ def pair():
         case _:
             raise ValueError("Invalid type")
 
-
+CORS(app)
 if __name__ == '__main__':
     app.run()

@@ -6,6 +6,7 @@ import elevenlabs_api as tts
 import random as rnd
 
 app = Flask(__name__)
+cnt = 0
 
 
 @app.route('/characters', methods=['GET'])
@@ -53,7 +54,53 @@ def random():
                 fake_audio_uuid = tts.get_audio_path(fake_text, fake_voice_id)
                 return jsonify({
                     'character': character,
-                    'audio_path': 'https://static.bubshait.me/ichack25/fake/' + str(fake_audio_uuid) + ".mp3",
+                    'audio_path': 'https://static.bubshait.me/ichack25/fake/' + str(
+                        fake_audio_uuid) + ".mp3",
+                    'is_real': False
+                })
+        case _:
+            raise ValueError("Invalid type")
+
+
+
+
+@app.route('/demo', methods=['GET'])
+def demo():
+    global cnt
+    # Return a path to random fake or real data for a random character
+    media_type = request.args.get('type')
+    character_id = [1, 0, 3][cnt % 3]
+    character = db.get_character_by_id(character_id)
+    is_real = False if cnt % 3 == 1 else True
+    cnt += 1
+
+    match media_type:
+        case 'text':
+            if is_real:
+                real_text = db.get_real_text(character['characterID'])
+                return jsonify({
+                    'character': character,
+                    'text': real_text,
+                    'is_real': True,
+                })
+            else:
+                fake_text = llm.get_fake_text(character['name'])
+                return jsonify({
+                    'character': character,
+                    'text': fake_text,
+                    'is_real': False,
+                })
+        case 'audio':
+            if is_real:
+                return jsonify({
+                    'character': character,
+                    'audio_path': f'https://static.bubshait.me/ichack25/real/demo{character_id}.mp3',
+                    'is_real': True,
+                })
+            else:
+                return jsonify({
+                    'character': character,
+                    'audio_path': f'https://static.bubshait.me/ichack25/fake/demo{character_id}.mp3',
                     'is_real': False
                 })
         case _:
@@ -87,6 +134,7 @@ def pair():
             })
         case _:
             raise ValueError("Invalid type")
+
 
 CORS(app)
 if __name__ == '__main__':

@@ -14,7 +14,7 @@ def get_fake_text(character):
     text = client.messages.create(
         model="claude-3-5-sonnet-20241022",
         max_tokens=1000,
-        temperature=0,
+        temperature=0.5,
         system="You are part of a AI misinformation awareness app. "
                "You will help people to identify fake news and misinformation."
                "To do this you will be asked to generate fake text "

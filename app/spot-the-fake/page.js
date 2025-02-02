@@ -1,12 +1,31 @@
 "use client";
 
-import React, { useState } from "react";
-import Link from "next/link";
-import { MediaBox } from "../../components/MediaBox"; // Adjust the import path as necessary
+import React, { useState, useEffect } from "react";
+import { TextComponent, AudioComponent } from "../../components/MediaBox"; // Adjust the import path as necessary
 
 const SpotTheFake = () => {
   const [counter, setCounter] = useState(1);
   const [selected, setSelected] = useState(null);
+  const [mediaData, setMediaData] = useState({ real: "", fake: "" });
+  const [mediaType, setMediaType] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchMediaData = async () => {
+      setLoading(true);
+      const type = "audio";
+      setMediaType(type);
+      const response = await fetch(`http://127.0.0.1:5000/pair?type=${type}`);
+      const data = await response.json();
+      setMediaData({
+        real: type === "audio" ? data.real_audio_path : data.real_text,
+        fake: type === "audio" ? data.fake_audio_path : data.fake_text,
+      });
+      setLoading(false);
+    };
+
+    fetchMediaData();
+  }, [counter]);
 
   const handleSelect = (id) => {
     setSelected(id);
@@ -16,12 +35,18 @@ const SpotTheFake = () => {
     if (counter < 10) {
       setCounter(counter + 1);
       setSelected(null);
-      // Fetch new images here
     } else {
-      // Redirect to home screen
       window.location.href = "/";
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-900 text-white">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
@@ -30,8 +55,41 @@ const SpotTheFake = () => {
         <span className="text-xl">Counter: {counter}/10</span>
       </div>
       <div className="flex space-x-4 mt-8">
-        <MediaBox id={1} selected={selected === 1} onSelect={handleSelect} imgSrc="/path/to/image1.jpg" />
-        <MediaBox id={2} selected={selected === 2} onSelect={handleSelect} imgSrc="/path/to/image2.jpg" />
+        {mediaType === "audio" ? (
+          <>
+            <AudioComponent
+              id={1}
+              selected={selected === 1}
+              onSelect={handleSelect}
+              imgSrc="/path/to/audio-placeholder.jpg"
+              audioSrc={mediaData.real}
+            />
+            <AudioComponent
+              id={2}
+              selected={selected === 2}
+              onSelect={handleSelect}
+              imgSrc="/path/to/audio-placeholder.jpg"
+              audioSrc={mediaData.fake}
+            />
+          </>
+        ) : (
+          <>
+            <TextComponent
+              id={1}
+              selected={selected === 1}
+              onSelect={handleSelect}
+              imgSrc="/path/to/text-placeholder.jpg"
+              text={mediaData.real}
+            />
+            <TextComponent
+              id={2}
+              selected={selected === 2}
+              onSelect={handleSelect}
+              imgSrc="/path/to/text-placeholder.jpg"
+              text={mediaData.fake}
+            />
+          </>
+        )}
       </div>
       <button
         onClick={handleSubmit}

@@ -1,10 +1,12 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 import db
 import claude_api as llm
 import elevenlabs_api as tts
 import random as rnd
 
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route('/characters', methods=['GET'])
@@ -41,7 +43,7 @@ def random():
             raise ValueError("Invalid type")
 
 
-@app.route('/pair')
+@app.route('/pair', methods=['GET'])
 def pair():
     # Return a path to a pair of real and fake data for a random character
     media_type = request.args.get('type')
@@ -52,6 +54,10 @@ def pair():
             fake_voice_id = db.get_fake_voice_id(character['characterID'])
             fake_text = llm.get_fake_text(character['name'])
             fake_audio = tts.get_audio_path(fake_text, fake_voice_id)
+            print(jsonify({
+                'real_audio_path': real_audio,
+                'fake_audio_path': fake_audio,
+            }))
             return jsonify({
                 'real_audio_path': real_audio,
                 'fake_audio_path': fake_audio,
